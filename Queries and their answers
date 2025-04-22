@@ -1,0 +1,101 @@
+ CREATE DATABASE unicorn_companies;
+ 
+CREATE TABLE unicorns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company VARCHAR(255),
+    country VARCHAR(100),
+    sector VARCHAR(100),
+    valuation DECIMAL(10 , 2 ),
+    founded_year INT,
+    investors TEXT
+);
+
+INSERT INTO unicorns   
+VALUES
+ (1, 'SpaceX', 'United States', 'Aerospace', 100.3, 2002, 'Fidelity, Founders Fund, Baillie Gifford'),
+ (2, 'Stripe', 'United States', 'FinTech', 95.0, 2010, 'Sequoia Capital, Andreessen Horowitz, Baillie Gifford'),
+ (3, 'ByteDance', 'China', 'Artificial Intelligence', 140.0, 2012, 'Sequoia Capital China, General Atlantic'),
+ (4, 'UiPath', 'United States', 'Robotics', 35.0, 2005, 'Accel, CapitalG, Sequoia Capital'),
+ (5, 'Klarna', 'Sweden', 'FinTech', 46.0, 2005, 'Sequoia Capital, Silver Lake, Dragoneer');
+ 
+-- 1-	Top 5 Countries by Number of Unicorns 
+SELECT 
+    country, COUNT(company) AS number_of_unicorns
+FROM
+    unicorns
+GROUP BY country
+ORDER BY number_of_unicorns DESC
+LIMIT 5;
+
+
+-- 2-	 Top 3 Sectors by Average Valuation
+SELECT 
+    sector, AVG(valuation) AS avg_valuation
+FROM
+    unicorns
+GROUP BY sector
+ORDER BY avg_valuation DESC
+LIMIT 3;
+
+
+-- 3-	Unicorns Founded After 2010
+SELECT 
+    *
+FROM
+    unicorns
+WHERE
+    founded_year > 2010;
+ 
+
+-- 4-	Total Valuation of Unicorns in the FinTech Sector 
+SELECT 
+ SUM(valuation) AS Total_Valuation
+FROM
+    unicorns
+WHERE
+    sector = "FinTech";
+   
+
+-- 5-	Most Common Investors
+
+SELECT 
+    investors, COUNT(*) AS number_of_unicorns
+FROM
+    unicorns
+GROUP BY investors
+ORDER BY number_of_unicorns DESC;
+
+
+-- Challenges
+ 
+-- Identify Trends: Explore trends in the data, such as the growth of unicorns in specific sectors or countries. 
+-- by sector
+SELECT 
+    country, 
+    founded_year, 
+    COUNT(*) AS number_of_unicorns
+FROM 
+    unicorns
+GROUP BY 
+    country, 
+    founded_year
+ORDER BY 
+    country, 
+    founded_year;
+    
+-- o	Investor Analysis: Which investors have the most unicorns in their portfolio? 
+SELECT 
+    investors, COUNT(*) AS number_of_unicorns
+FROM
+    unicorns
+GROUP BY investors
+ORDER BY number_of_unicorns DESC;
+
+
+-- o	Growth Analysis: Compare valuations of companies founded in different decades to understand growth trends
+SELECT 
+    FLOOR(founded_year / 10) * 10 AS decade,
+    AVG(valuation) AS average_valuation
+FROM unicorns
+GROUP BY decade
+ORDER BY decade;
